@@ -1,93 +1,110 @@
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#NoTrayIcon
+#SingleInstance Force
+
+
 ;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
 ; Description
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
-; Sends pdf and jpg files to ADM and Basic Webs
+; Runs Auto-Uploader after getting .adm username and pass
 
 
 
 ;~~~~~~~~~~~~~~~~~~~~~
 ;Compile Options
 ;~~~~~~~~~~~~~~~~~~~~~
-StartUp()
-Version = Version 0.1
+Startup()
+Version = v0.1
 
 ;Dependencies
 ;None
 
-;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
-; StartUp
-;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
-
-Sb_GlobalVars()
-
 
 ;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
-; File Renaming
+; Startup
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
 
-
-Loop, Read, %A_ScriptDir%\Data\forms.txt
-{
-	StringReplace, FormsDir, A_LoopReadLine, %A_Space%,, All
-		If (FormsDir != "")
-		{
-		FormsDir_Array.Insert(FormsDir)
-		}
-}
-
-Loop, %A_ScriptDir%\*.pdf {
-ArraySize := FormsDir_Array.MaxIndex()
-	Loop, %ArraySize%
+	IfExist, %A_ScriptDir%\Uploader.exe
 	{
-	Path_Destination := FormsDir_Array[A_Index]
-	;Msgbox, Move to %Path_Destination%\%A_LoopFileName% ?
-	FileCopy, %A_ScriptDir%\%A_LoopFileName%, %Path_Destination%\%A_LoopFileName%, 1
+	Uploader = %A_ScriptDir%\Uploader.exe
 	}
-
-}
-
-
-Loop, Read, %A_ScriptDir%\Data\images.txt
-{
-	StringReplace, ImageDir, A_LoopReadLine, %A_Space%,, All
-		If (ImageDir != "")
-		{
-		ImageDir_Array.Insert(ImageDir)
-		}
-}
-
-Loop, %A_ScriptDir%\*.jpg {
-ArraySize := ImageDir_Array.MaxIndex()
-	Loop, %ArraySize%
+	Else
 	{
-	Path_Destination := ImageDir_Array[A_Index]
-	FileCopy, %A_ScriptDir%\%A_LoopFileName%, %Path_Destination%\%A_LoopFileName%, 1
+	Msgbox, Uploader.exe not found in this directory. Try again.
+	ExitApp
 	}
+GUI()
+Return
 
-}
 
+;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
+; Main
+;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
+
+UploadButton:
+
+;Grab user entered contents from GUI
+Gui, Submit, NoHide
+Gui, Font, s14 w70, Arial
+Gui, Add, Text, x10 y85 w90 h30 vGUI_WorkingText, Working...
+
+
+;Run As user entered credentials
+RunAs, %ME_User%, %ME_Pass%, TVGOPS
+	RunWait, %Uploader%
+	
+Sleep 100
+
+guicontrol, Text, GUI_WorkingText, Done!
+Sleep 4200
+GuiClose:
 ExitApp
-
-
 
 ;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
 ; Functions
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
-Sb_GlobalVars()
+
+
+;/--\--/--\--/--\--/--\
+; GUI
+;\--/--\--/--\--/--\--/
+
+GUI()
 {
 global
+Gui +AlwaysOnTop
+;Title
+Gui, Font, s14 w70, Arial
+Gui, Add, Text, x2 y0 w200 h40 +Center, Auto-Upload
+Gui, Font, s10 w70, Arial
+Gui, Add, Text, x180 y0 w30 h20 +Right, %Version%
 
-ImageDir_Array := []
-FormsDir_Array := []
-X = 0
+
+;User Input
+Gui, Add, Text, x2 y30 w90 h30 +Right, .adm Account:
+Gui, Add, Edit, x100 y30 w100 h20 vME_User,
+
+Gui, Add, Text, x2 y55 w90 h30 +Right, Pass:
+Gui, Add, Edit, x100 y55 w100 h20 Password vME_Pass,
+
+Gui, Add, Button, x100 y80 w90 h30 gUploadButton default, Upload
+
+;Large Progress Bar UNUSED
+;Gui, Add, Progress, x4 y130 w480 h20 , 100
+
+Gui, Show, x127 y87 h130 w220, Auto-Upload
+Return
 }
 
 
-;No Tray icon because it takes 2 seconds; Do not allow running more then one instance at a time
-StartUp()
+;/--\--/--\--/--\--/--\
+; Subroutines
+;\--/--\--/--\--/--\--/
+
+Startup()
 {
-#NoTrayIcon
 #SingleInstance force
+#NoEnv
 }
