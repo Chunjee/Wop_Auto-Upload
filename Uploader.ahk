@@ -9,7 +9,7 @@
 ;Compile Options
 ;~~~~~~~~~~~~~~~~~~~~~
 StartUp()
-Version = Version 0.1
+Version = Version 0.2
 
 ;Dependencies
 ;None
@@ -22,10 +22,15 @@ Sb_GlobalVars()
 
 
 ;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
-; File Renaming
+; Main+
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
 
+
+
+;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
+; Pdfs
+;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
 Loop, Read, %A_ScriptDir%\Data\forms.txt
 {
@@ -36,11 +41,15 @@ Loop, Read, %A_ScriptDir%\Data\forms.txt
 }
 
 Loop, %A_ScriptDir%\*.pdf {
-ReNamer(A_LoopFileName,"TimeformUSTVG","TFUSANALYSIS-li.pdf")
-ReNamer(A_LoopFileName,"TFUS","TFPOD-li.pdf")
 
-ArraySize := FormsDir_Array.MaxIndex()
-	Loop, %ArraySize%
+Fn_ReNamer(A_LoopFileName,"TimeformUSTVG","TFUSANALYSIS-li.pdf")
+Fn_ReNamer(A_LoopFileName,"POD-","TFPOD-li.pdf")
+
+Fn_ReNamer(A_LoopFileName,"fullcardLosAl","TFUSANALYSIS-li.pdf")
+}
+
+Loop, %A_ScriptDir%\*.pdf {
+	Loop % FormsDir_Array.MaxIndex()
 	{
 	Path_Destination := FormsDir_Array[A_Index]
 	;Msgbox, Move to %Path_Destination%\%A_LoopFileName% ?
@@ -49,6 +58,11 @@ ArraySize := FormsDir_Array.MaxIndex()
 
 }
 
+
+
+;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
+; Images
+;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
 Loop, Read, %A_ScriptDir%\Data\images.txt
 {
@@ -59,14 +73,26 @@ Loop, Read, %A_ScriptDir%\Data\images.txt
 		}
 }
 
-Loop, %A_ScriptDir%\*.jpg {
-ReNamer(A_LoopFileName,"best","BestBet.jpg")
-ReNamer(A_LoopFileName,"full","FullCard.jpg")
-ReNamer(A_LoopFileName,"Ticket","SATicket.jpg")
 
+Loop, %A_ScriptDir%\*.jpg {
+;Rename files if they were saved wrong
+
+Fn_ReNamer(A_LoopFileName,"best","BestBet.jpg")
+Fn_ReNamer(A_LoopFileName,"bet","BestBet.jpg")
+
+Fn_ReNamer(A_LoopFileName,"full","FullCard.jpg")
+Fn_ReNamer(A_LoopFileName,"card","FullCard.jpg")
+
+Fn_ReNamer(A_LoopFileName,"SA","SATicket.jpg")
+Fn_ReNamer(A_LoopFileName,"SATicket","SATicket.jpg")
+
+Fn_ReNamer(A_LoopFileName,"LA","LATicket.jpg")
+Fn_ReNamer(A_LoopFileName,"LATicket","LATicket.jpg")
+}
+
+Loop, %A_ScriptDir%\*.jpg {
 ArraySize := ImageDir_Array.MaxIndex()
-	Loop, %ArraySize%
-	{
+	Loop, %ArraySize% {
 	Path_Destination := ImageDir_Array[A_Index]
 	FileCopy, %A_ScriptDir%\%A_LoopFileName%, %Path_Destination%\%A_LoopFileName%, 1
 	}
@@ -81,13 +107,13 @@ ExitApp
 ; Functions
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
-ReNamer(para_FileName,para_String,para_NewName)
+Fn_ReNamer(para_FileName,para_String,para_NewName)
 {
 StringReplace, l_NospaceFileName, para_FileName, %A_Space%, , All
 
 	IfInString, l_NospaceFileName, %para_String%
 	{
-	FileMove, %A_ScriptDir%\%para_FileName%, %A_ScriptDir%\%para_NewName%
+	FileMove, %A_ScriptDir%\%para_FileName%, %A_ScriptDir%\%para_NewName%, 1
 	}
 Return %para_NewName%
 }
