@@ -40,13 +40,6 @@ Loop, Read, %A_ScriptDir%\Data\forms.txt
 		}
 }
 
-Loop, %A_ScriptDir%\*.pdf {
-
-Fn_ReNamer(A_LoopFileName,"TimeformUSTVG","TFUSANALYSIS-li.pdf")
-Fn_ReNamer(A_LoopFileName,"POD-","TFPOD-li.pdf")
-
-Fn_ReNamer(A_LoopFileName,"fullcardLosAl","TFUSANALYSIS-li.pdf")
-}
 
 Loop, %A_ScriptDir%\*.pdf {
 	Loop % FormsDir_Array.MaxIndex()
@@ -74,21 +67,6 @@ Loop, Read, %A_ScriptDir%\Data\images.txt
 }
 
 
-Loop, %A_ScriptDir%\*.jpg {
-;Rename files if they were saved wrong
-
-Fn_ReNamer(A_LoopFileName,"best","BestBet.jpg")
-Fn_ReNamer(A_LoopFileName,"bet","BestBet.jpg")
-
-Fn_ReNamer(A_LoopFileName,"full","FullCard.jpg")
-Fn_ReNamer(A_LoopFileName,"card","FullCard.jpg")
-
-Fn_ReNamer(A_LoopFileName,"SA","SATicket.jpg")
-Fn_ReNamer(A_LoopFileName,"SATicket","SATicket.jpg")
-
-Fn_ReNamer(A_LoopFileName,"LA","LATicket.jpg")
-Fn_ReNamer(A_LoopFileName,"LATicket","LATicket.jpg")
-}
 
 Loop, %A_ScriptDir%\*.jpg {
 ArraySize := ImageDir_Array.MaxIndex()
@@ -106,17 +84,6 @@ ExitApp
 ;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
 ; Functions
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
-
-Fn_ReNamer(para_FileName,para_String,para_NewName)
-{
-StringReplace, l_NospaceFileName, para_FileName, %A_Space%, , All
-
-	IfInString, l_NospaceFileName, %para_String%
-	{
-	FileMove, %A_ScriptDir%\%para_FileName%, %A_ScriptDir%\%para_NewName%, 1
-	}
-Return %para_NewName%
-}
 
 Sb_GlobalVars()
 {

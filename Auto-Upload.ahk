@@ -14,7 +14,7 @@
 ;Compile Options
 ;~~~~~~~~~~~~~~~~~~~~~
 Startup()
-Version = v0.1
+Version = v0.2
 
 ;Dependencies
 ;None
@@ -34,14 +34,43 @@ Version = v0.1
 	Msgbox, Uploader.exe not found in this directory. Try again.
 	ExitApp
 	}
-GUI()
-Return
 
 
 ;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
 ; Main
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
+
+;Rename files if they were sent wrong
+Loop, %A_ScriptDir%\*.pdf {
+Fn_ReNamer(A_LoopFileName,"TimeformUSTVG","TFUSANALYSIS-li.pdf")
+Fn_ReNamer(A_LoopFileName,"POD-","TFPOD-li.pdf")
+
+Fn_ReNamer(A_LoopFileName,"fullcardLosAl","TFUSANALYSIS-li.pdf")
+}
+
+
+Loop, %A_ScriptDir%\*.jpg {
+Fn_ReNamer(A_LoopFileName,"best","BestBet.jpg")
+Fn_ReNamer(A_LoopFileName,"bet","BestBet.jpg")
+
+Fn_ReNamer(A_LoopFileName,"full","FullCard.jpg")
+Fn_ReNamer(A_LoopFileName,"card","FullCard.jpg")
+
+Fn_ReNamer(A_LoopFileName,"SA","SATicket.jpg")
+Fn_ReNamer(A_LoopFileName,"SATicket","SATicket.jpg")
+
+Fn_ReNamer(A_LoopFileName,"LA","LATicket.jpg")
+Fn_ReNamer(A_LoopFileName,"LATicket","LATicket.jpg")
+}
+
+
+;Show GUI
+GUI()
+
+
+;Stop here until user enters credentials and presses Upload button
+Return
 UploadButton:
 
 ;Grab user entered contents from GUI
@@ -65,7 +94,19 @@ ExitApp
 ; Functions
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
+Fn_ReNamer(para_FileName,para_String,para_NewName)
+{
+StringReplace, l_NospaceFileName, para_FileName, %A_Space%, , All
 
+	IfInString, l_NospaceFileName, %para_String%
+	{
+	FileMove, %A_ScriptDir%\%para_FileName%, %A_ScriptDir%\%para_NewName%, 1
+		If Errorlevel {
+		Msgbox, There was a problem renaming the %para_FileName% file. Permissions/FileInUse
+		}
+	}
+Return %para_NewName%
+}
 
 ;/--\--/--\--/--\--/--\
 ; GUI
