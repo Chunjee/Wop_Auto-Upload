@@ -35,12 +35,14 @@ Version = v0.2
 	ExitApp
 	}
 
+;Show GUI
+GUI()
 
 ;/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\
 ; Main
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
-
+ReNameButton:
 ;Rename files if they were sent wrong
 Loop, %A_ScriptDir%\*.pdf {
 Fn_ReNamer(A_LoopFileName,"TimeformUSTVG","TFUSANALYSIS-li.pdf")
@@ -63,10 +65,6 @@ Fn_ReNamer(A_LoopFileName,"SATicket","SATicket.jpg")
 Fn_ReNamer(A_LoopFileName,"LA","LATicket.jpg")
 Fn_ReNamer(A_LoopFileName,"LATicket","LATicket.jpg")
 }
-
-
-;Show GUI
-GUI()
 
 
 ;Stop here until user enters credentials and presses Upload button
@@ -131,11 +129,13 @@ Gui, Add, Text, x2 y55 w90 h30 +Right, Pass:
 Gui, Add, Edit, x100 y55 w100 h20 Password vME_Pass,
 
 Gui, Add, Button, x100 y80 w90 h30 gUploadButton default, Upload
+Gui, Add, Button, x100 y110 w90 h40 gReNameButton, Rename BTW Files
+
 
 ;Large Progress Bar UNUSED
 ;Gui, Add, Progress, x4 y130 w480 h20 , 100
 
-Gui, Show, x127 y87 h130 w220, Auto-Upload
+Gui, Show, x127 y87 h150 w220, Auto-Upload
 Return
 }
 
