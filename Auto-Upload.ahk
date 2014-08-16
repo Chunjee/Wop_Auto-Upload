@@ -14,7 +14,7 @@
 ;Compile Options
 ;~~~~~~~~~~~~~~~~~~~~~
 Startup()
-Version = v0.2
+Version = v0.2.2
 
 ;Dependencies
 ;None
@@ -42,29 +42,44 @@ GUI()
 ; Main
 ;\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/--\--/
 
+Return
 ReNameButton:
 ;Rename files if they were sent wrong
-Loop, %A_ScriptDir%\*.pdf {
-Fn_ReNamer(A_LoopFileName,"TimeformUSTVG","TFUSANALYSIS-li.pdf")
-Fn_ReNamer(A_LoopFileName,"POD-","TFPOD-li.pdf")
+	Loop, %A_ScriptDir%\*.pdf {
 
-Fn_ReNamer(A_LoopFileName,"fullcardLosAl","TFUSANALYSIS-li.pdf")
-}
+	;Play of the day
+	Fn_ReNamer(A_LoopFileName,"POD-","TFPOD-li.pdf")
+
+	;Timeform Analysis
+	Fn_ReNamer(A_LoopFileName,"TimeformUS","TFUSANALYSIS-li.pdf")
+	Fn_ReNamer(A_LoopFileName,"TimeformUSTVG","TFUSANALYSIS-li.pdf")
+	Fn_ReNamer(A_LoopFileName,"fullcard","TFUSANALYSIS-li.pdf")
+	
+	Fn_ReNamer(A_LoopFileName,"TimeformUSTVGDMR","TFUSANALYSIS-li.pdf")
+	Fn_ReNamer(A_LoopFileName,"fullcardDelMar","TFUSANALYSIS-li.pdf")
+	Fn_ReNamer(A_LoopFileName,"fullcardLosAl","TFUSANALYSIS-li.pdf")
+	}
 
 
-Loop, %A_ScriptDir%\*.jpg {
-Fn_ReNamer(A_LoopFileName,"best","BestBet.jpg")
-Fn_ReNamer(A_LoopFileName,"bet","BestBet.jpg")
+	Loop, %A_ScriptDir%\*.jpg {
+	Fn_ReNamer(A_LoopFileName,"best","BestBet.jpg")
+	Fn_ReNamer(A_LoopFileName,"bet","BestBet.jpg")
 
-Fn_ReNamer(A_LoopFileName,"full","FullCard.jpg")
-Fn_ReNamer(A_LoopFileName,"card","FullCard.jpg")
+	Fn_ReNamer(A_LoopFileName,"full","FullCard.jpg")
+	Fn_ReNamer(A_LoopFileName,"card","FullCard.jpg")
 
-Fn_ReNamer(A_LoopFileName,"SA","SATicket.jpg")
-Fn_ReNamer(A_LoopFileName,"SATicket","SATicket.jpg")
+	;Santa Anita
+	Fn_ReNamer(A_LoopFileName,"SA","SATicket.jpg")
+	Fn_ReNamer(A_LoopFileName,"SATicket","SATicket.jpg")
 
-Fn_ReNamer(A_LoopFileName,"LA","LATicket.jpg")
-Fn_ReNamer(A_LoopFileName,"LATicket","LATicket.jpg")
-}
+	;Los Alamitos
+	Fn_ReNamer(A_LoopFileName,"LA","LATicket.jpg")
+	Fn_ReNamer(A_LoopFileName,"LATicket","LATicket.jpg")
+
+	;Del Mar
+	Fn_ReNamer(A_LoopFileName,"DMR","DMRTicket.jpg")
+	Fn_ReNamer(A_LoopFileName,"RTicket","DMRTicket.jpg")
+	}
 
 
 ;Stop here until user enters credentials and presses Upload button
@@ -118,7 +133,7 @@ Gui +AlwaysOnTop
 Gui, Font, s14 w70, Arial
 Gui, Add, Text, x2 y0 w200 h40 +Center, Auto-Upload
 Gui, Font, s10 w70, Arial
-Gui, Add, Text, x180 y0 w30 h20 +Right, %Version%
+Gui, Add, Text, x168 y0 w50 h20 +Right, %Version%
 
 
 ;User Input
